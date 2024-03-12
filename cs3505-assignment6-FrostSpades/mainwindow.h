@@ -27,6 +27,8 @@ private slots:
 
     void resetColors();
 
+    void showSequence(std::vector<int> colorList);
+
 private:
     Ui::MainWindow *ui;
     Model model;
@@ -34,5 +36,6 @@ private:
     void glowButton(int buttonID);
     void enableGameButtons();
     void disableGameButtons();
+    void recurse(std::vector<int> colorList, int currentColor);
 };
 #endif // MAINWINDOW_H

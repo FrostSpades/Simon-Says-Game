@@ -5,16 +5,22 @@
 #include <QObject>
 
 class Model : public QObject{
+    Q_OBJECT
 private:
     int currentMove;
     std::vector<int> moves;
+    bool validatePlayerMove(int move);
 
 public:
     Model();
     ~Model();
     void clearMoves();
-    void addMove();
     bool processMove(int move);
+    void start();
+    double getTime();
+
+signals:
+    void createdSequence(std::vector<int> colorList);
 };
 
 #endif // MODEL_H
