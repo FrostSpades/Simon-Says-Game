@@ -46,8 +46,6 @@ void MainWindow::showSequence(std::vector<int> colorList) {
 }
 
 void MainWindow::recurse(std::vector<int> colorList, int currentColor) {
-    resetColors();
-
     if (currentColor > colorList.size()) {
         // Call model method to start listening for computer presses
         return;
@@ -55,8 +53,12 @@ void MainWindow::recurse(std::vector<int> colorList, int currentColor) {
 
     glowButton(colorList[currentColor]);
 
-    //QTimer::singleShot(model.getTime(), this, [this](){recurse(colorList, currentColor + 1);});
-    return;
+    QTimer::singleShot(model.getTime(), this, [=](){wait(colorList, currentColor + 1);});
+}
+
+void MainWindow::wait(std::vector<int> colorList, int currentColor) {
+    resetColors();
+    QTimer::singleShot(model.getTime(), this, [=](){recurse(colorList, currentColor + 1);});
 }
 
 void MainWindow::resetColors() {

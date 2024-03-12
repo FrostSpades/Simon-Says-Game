@@ -37,5 +37,6 @@ private:
     void enableGameButtons();
     void disableGameButtons();
     void recurse(std::vector<int> colorList, int currentColor);
+    void wait(std::vector<int> colorList, int currentColor);
 };
 #endif // MAINWINDOW_H
