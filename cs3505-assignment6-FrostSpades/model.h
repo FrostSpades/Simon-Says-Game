@@ -12,6 +12,7 @@ private:
     std::vector<int> moves;
     void performComputerMove();
     bool gameIsOver;
+    bool isPlayersTurn;
 
 public:
     Model();
@@ -26,7 +27,7 @@ signals:
     void computersTurn();
     void turnOffButtons();
     void gameOver();
-
+    void pauseBetweenTurns();
 public slots:
     void lightNextButton();
     bool validatePlayerMove(int move);

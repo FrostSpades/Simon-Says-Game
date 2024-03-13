@@ -29,6 +29,7 @@ private slots:
 
 public slots:
     void glowButton(int buttonId, int timeToBeLit);
+    //void unGlowButtons();
     void resetColors();
     void disableGameButtons();
     void gameOver();
