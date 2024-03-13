@@ -10,6 +10,7 @@ private:
     int currentDemoColor;
     int currentPlayerMove;
     std::vector<int> moves;
+    void performComputerMove();
 
 public:
     Model();
@@ -19,9 +20,10 @@ public:
     double getTime();
 
 signals:
-    void createdSequence(std::vector<int> colorList);
     void lightUpButton(int buttonId, int timeToBeLit);
     void playersTurn();
+    void computersTurn();
+    void turnOffButtons();
 
 public slots:
     void lightNextButton();

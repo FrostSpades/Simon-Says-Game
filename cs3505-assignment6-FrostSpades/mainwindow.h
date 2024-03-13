@@ -27,12 +27,10 @@ private slots:
     void on_startButton_clicked();
 
 
-
-
-
 public slots:
     void glowButton(int buttonId, int timeToBeLit);
     void resetColors();
+    void disableGameButtons();
 
 private:
     Ui::MainWindow *ui;
@@ -40,9 +38,9 @@ private:
 
 
     void enableGameButtons();
-    void disableGameButtons();
     void recurse(std::vector<int> colorList, int currentColor);
     void wait(std::vector<int> colorList, int currentColor);
+    void wait();
 
 signals:
     void startButtonPressed();

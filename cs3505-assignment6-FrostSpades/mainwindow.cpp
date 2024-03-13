@@ -17,9 +17,11 @@ MainWindow::MainWindow(QWidget *parent)
     //connect(&model, &Model::createdSequence, this, &MainWindow::showSequence);
     connect(this, &MainWindow::startButtonPressed, &model, &Model::start);
     connect(this, &MainWindow::buttonLightingComplete, &model, &Model::lightNextButton);
+    //connect(&model, &Model::)
     connect(&model, &Model::lightUpButton, this, &MainWindow::glowButton);
     connect(&model, &Model::playersTurn, this, &MainWindow::enableGameButtons);
     connect(this, &MainWindow::playerSelectionComplete, &model, &Model::validatePlayerMove);
+    connect(&model, &Model::turnOffButtons, this, &MainWindow::disableGameButtons);
 }
 
 MainWindow::~MainWindow()
@@ -52,7 +54,9 @@ void MainWindow::resetColors() {
     ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
     ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
     // tell model colors have been reset
-    emit buttonLightingComplete();
+
+    // TODO: make this time scale properly
+    QTimer::singleShot(300, this, [=](){emit buttonLightingComplete();});
 }
 
 void MainWindow::on_redButton_clicked()
