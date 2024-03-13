@@ -29,7 +29,7 @@ signals:
     void gameOver();
     void pauseBetweenTurns();
 public slots:
-    void lightNextButton();
+    //void lightNextButton();
     bool validatePlayerMove(int move);
     void start();
 };

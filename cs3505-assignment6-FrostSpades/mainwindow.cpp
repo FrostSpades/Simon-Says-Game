@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     //connect(&model, &Model::signal, this, &MainWindow::disableGameButtons);
     //connect(&model, &Model::createdSequence, this, &MainWindow::showSequence);
     connect(this, &MainWindow::startButtonPressed, &model, &Model::start);
-    connect(this, &MainWindow::buttonLightingComplete, &model, &Model::lightNextButton);
+    //connect(this, &MainWindow::buttonLightingComplete, &model, &Model::lightNextButton);
     //connect(&model, &Model::)
     connect(&model, &Model::lightUpButton, this, &MainWindow::glowButton);
     connect(&model, &Model::playersTurn, this, &MainWindow::enableGameButtons);
@@ -41,11 +41,6 @@ void MainWindow::disableGameButtons() {
     ui->blueButton->setEnabled(false);
 }
 
-// void MainWindow::unGlowButtons()
-// {
-//     ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
-//     ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
-// }
 
 void MainWindow::glowButton(int buttonID, int timeToBeLit) {
     if (buttonID == 0) {
@@ -67,20 +62,20 @@ void MainWindow::gameOver()
 void MainWindow::resetColors() {
     ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
     ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
-    // tell model colors have been reset
-
-    // TODO: make this time scale properly
-    QTimer::singleShot(300, this, [=](){emit buttonLightingComplete();});
 }
 
 void MainWindow::on_redButton_clicked()
 {
+    ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
+    ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
     emit playerSelectionComplete(0);
 }
 
 
 void MainWindow::on_blueButton_clicked()
 {
+    ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
+    ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
     emit playerSelectionComplete(1);
 }
 

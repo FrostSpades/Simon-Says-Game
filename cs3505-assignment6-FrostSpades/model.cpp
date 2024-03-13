@@ -26,7 +26,7 @@ void Model::start() {
 }
 
 double Model::getTime() {
-    return 1000;
+    return 500;
 }
 
 bool Model::validatePlayerMove(int move)
@@ -59,7 +59,7 @@ bool Model::validatePlayerMove(int move)
         isPlayersTurn = false;
         emit turnOffButtons();
         currentPlayerMove = 0;
-        performComputerMove();
+        QTimer::singleShot(1000, this, [=](){performComputerMove();});
     }
 }
 
@@ -68,35 +68,14 @@ void Model::performComputerMove()
     int moveAdded = rand() % 2;
     cout<< "adding "<< moveAdded << " to sequence (0=red, 1=blue)" << endl;
     moves.push_back(moveAdded);
-    currentDemoColor = 0;
-    lightNextButton();
-}
-
-void Model::lightNextButton()
-{
-    if (!gameIsOver && !isPlayersTurn)
-    {
-        if (currentDemoColor < moves.size())
-        {
-            int buttonID = moves[currentDemoColor];
-            emit lightUpButton(buttonID, getTime());
-
-            // Schedule the next button to be lit after a delay
-            QTimer::singleShot(getTime(), this, [=]() {
-                currentDemoColor++;
-                lightNextButton(); // Call recursively to proceed to the next button
-            });
-        }
-        else
-        {
-            // Computer demo is done, switch to player's turn
-            currentPlayerMove = 0;
-            currentDemoColor = 0;
-            isPlayersTurn = true;
-            emit playersTurn();
-        }
+    for (int i = 0; i < moves.size(); i++) {
+        QTimer::singleShot(2*i*getTime(), this, [=](){emit lightUpButton(moves[i], getTime());});
     }
+
+    currentPlayerMove = 0;
+    emit playersTurn();
 }
+
 
 
 
