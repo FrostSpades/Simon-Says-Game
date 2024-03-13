@@ -14,8 +14,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
 
     //connect(&model, &Model::signal, this, &MainWindow::disableGameButtons);
-    connect(&model, &Model::createdSequence, this, &MainWindow::showSequence);
+    //connect(&model, &Model::createdSequence, this, &MainWindow::showSequence);
     connect(this, &MainWindow::startButtonPressed, &model, &Model::start);
+    connect(this, &MainWindow::buttonLightingComplete, &model, &Model::lightNextButton);
+    connect(&model, &Model::lightUpButton, this, &MainWindow::glowButton);
+    connect(&model, &Model::playersTurn, this, &MainWindow::enableGameButtons);
+    connect(this, &MainWindow::playerSelectionComplete, &model, &Model::validatePlayerMove);
 }
 
 MainWindow::~MainWindow()
@@ -33,51 +37,37 @@ void MainWindow::disableGameButtons() {
     ui->blueButton->setEnabled(false);
 }
 
-void MainWindow::glowButton(int buttonID) {
+void MainWindow::glowButton(int buttonID, int timeToBeLit) {
     if (buttonID == 0) {
         ui->redButton->setStyleSheet("background-color: rgb(200,50,50);");
+        QTimer::singleShot(timeToBeLit, this, [=](){resetColors();});
     }
     else {
         ui->blueButton->setStyleSheet("background-color: rgb(50,50,200);");
+        QTimer::singleShot(timeToBeLit, this, [=](){resetColors();});
     }
-}
-
-void MainWindow::showSequence(std::vector<int> colorList) {
-    recurse(colorList, 0);
-}
-
-void MainWindow::recurse(std::vector<int> colorList, int currentColor) {
-    if (currentColor > colorList.size()) {
-        // Call model method to start listening for computer presses
-        return;
-    }
-
-    glowButton(colorList[currentColor]);
-
-    QTimer::singleShot(model.getTime(), this, [=](){wait(colorList, currentColor + 1);});
-}
-
-void MainWindow::wait(std::vector<int> colorList, int currentColor) {
-    resetColors();
-    QTimer::singleShot(model.getTime(), this, [=](){recurse(colorList, currentColor + 1);});
 }
 
 void MainWindow::resetColors() {
     ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
     ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
+    // tell model colors have been reset
+    emit buttonLightingComplete();
 }
 
 void MainWindow::on_redButton_clicked()
 {
     resetColors();
-    glowButton(0);
+    glowButton(0, 300);
+    emit playerSelectionComplete(0);
 }
 
 
 void MainWindow::on_blueButton_clicked()
 {
     resetColors();
-    glowButton(1);
+    glowButton(1, 300);
+    emit playerSelectionComplete(1);
 }
 
 

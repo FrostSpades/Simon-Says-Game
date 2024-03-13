@@ -18,6 +18,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+
 private slots:
     void on_redButton_clicked();
 
@@ -25,15 +26,19 @@ private slots:
 
     void on_startButton_clicked();
 
-    void resetColors();
 
-    void showSequence(std::vector<int> colorList);
+
+
+
+public slots:
+    void glowButton(int buttonId, int timeToBeLit);
+    void resetColors();
 
 private:
     Ui::MainWindow *ui;
     Model model;
 
-    void glowButton(int buttonID);
+
     void enableGameButtons();
     void disableGameButtons();
     void recurse(std::vector<int> colorList, int currentColor);
@@ -41,5 +46,7 @@ private:
 
 signals:
     void startButtonPressed();
+    void buttonLightingComplete();
+    void playerSelectionComplete(int selection);
 };
 #endif // MAINWINDOW_H

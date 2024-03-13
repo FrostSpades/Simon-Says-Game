@@ -7,9 +7,9 @@
 class Model : public QObject{
     Q_OBJECT
 private:
-    int currentMove;
+    int currentDemoColor;
+    int currentPlayerMove;
     std::vector<int> moves;
-    bool validatePlayerMove(int move);
 
 public:
     Model();
@@ -20,6 +20,12 @@ public:
 
 signals:
     void createdSequence(std::vector<int> colorList);
+    void lightUpButton(int buttonId, int timeToBeLit);
+    void playersTurn();
+
+public slots:
+    void lightNextButton();
+    bool validatePlayerMove(int move);
     void start();
 };
 
