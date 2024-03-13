@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //connect(&model, &Model::signal, this, &MainWindow::disableGameButtons);
     connect(&model, &Model::createdSequence, this, &MainWindow::showSequence);
+    connect(this, &MainWindow::startButtonPressed, &model, &Model::start);
 }
 
 MainWindow::~MainWindow()

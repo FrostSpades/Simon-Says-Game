@@ -13,9 +13,7 @@ Model::~Model() {
 void Model::start() {
     moves.clear();
     moves.push_back(rand() % 2);
-    moves.push_back(rand() % 2);
-    moves.push_back(rand() % 2);
-    moves.push_back(rand() % 2);
+
 
     emit createdSequence(moves);
 }
