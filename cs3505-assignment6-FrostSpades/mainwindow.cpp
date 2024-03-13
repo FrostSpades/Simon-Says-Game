@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&model, &Model::playersTurn, this, &MainWindow::enableGameButtons);
     connect(this, &MainWindow::playerSelectionComplete, &model, &Model::validatePlayerMove);
     connect(&model, &Model::turnOffButtons, this, &MainWindow::disableGameButtons);
+    connect(&model, &Model::gameOver, this, &MainWindow::gameOver);
 }
 
 MainWindow::~MainWindow()
@@ -48,6 +49,12 @@ void MainWindow::glowButton(int buttonID, int timeToBeLit) {
         ui->blueButton->setStyleSheet("background-color: rgb(50,50,200);");
         QTimer::singleShot(timeToBeLit, this, [=](){resetColors();});
     }
+}
+
+void MainWindow::gameOver()
+{
+    disableGameButtons();
+    ui->redButton->setStyleSheet("background-color: rgb(0,0,0);");
 }
 
 void MainWindow::resetColors() {

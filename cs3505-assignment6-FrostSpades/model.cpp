@@ -12,20 +12,47 @@ Model::~Model() {
 
 void Model::start() {
     moves.clear();
-    moves.push_back(rand() % 2);
+    currentPlayerMove = 0;
     currentDemoColor = 0;
-
-    emit createdSequence(moves);
+    performComputerMove();
+    // disable start button
 }
 
 double Model::getTime() {
-    return 500;
+    return 5000;
 }
-
 
 bool Model::validatePlayerMove(int move)
 {
-    // validate the move
+    if(currentPlayerMove < moves.size())
+    {
+        // see if its the right move
+        if(move == moves[currentPlayerMove])
+        {
+            // update progress
+            currentPlayerMove++;
+        }
+        else
+        {
+            // emit gameover and show graphic
+            emit gameOver();
+            // display graphic
+        }
+    }
+
+    if(currentPlayerMove == moves.size())
+    {
+        emit turnOffButtons();
+        currentPlayerMove = 0;
+        performComputerMove();
+    }
+}
+
+void Model::performComputerMove()
+{
+    moves.push_back(rand() % 2);
+    currentDemoColor = 0;
+    lightNextButton();
 }
 
 void Model::lightNextButton()

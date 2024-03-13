@@ -31,6 +31,7 @@ public slots:
     void glowButton(int buttonId, int timeToBeLit);
     void resetColors();
     void disableGameButtons();
+    void gameOver();
 
 private:
     Ui::MainWindow *ui;

@@ -24,6 +24,7 @@ signals:
     void playersTurn();
     void computersTurn();
     void turnOffButtons();
+    void gameOver();
 
 public slots:
     void lightNextButton();
