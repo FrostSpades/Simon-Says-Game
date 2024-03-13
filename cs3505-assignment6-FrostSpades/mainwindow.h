@@ -27,6 +27,10 @@ private slots:
     void on_startButton_clicked();
 
 
+    void on_brRadioButton_clicked();
+
+    void on_ypRadioButton_clicked();
+
 public slots:
     void glowButton(int buttonId, int timeToBeLit);
     //void unGlowButtons();
@@ -42,7 +46,7 @@ public slots:
 private:
     Ui::MainWindow *ui;
     Model model;
-
+    int currentColors;
 
     void enableGameButtons();
     void recurse(std::vector<int> colorList, int currentColor);

@@ -15,6 +15,7 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QRadioButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QWidget>
@@ -30,6 +31,9 @@ public:
     QPushButton *startButton;
     QTextBrowser *gameOverScreen;
     QProgressBar *progressBar;
+    QRadioButton *brRadioButton;
+    QRadioButton *ypRadioButton;
+    QTextBrowser *textBrowser;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -56,6 +60,16 @@ public:
         progressBar->setObjectName("progressBar");
         progressBar->setGeometry(QRect(210, 440, 441, 41));
         progressBar->setValue(0);
+        brRadioButton = new QRadioButton(centralwidget);
+        brRadioButton->setObjectName("brRadioButton");
+        brRadioButton->setGeometry(QRect(10, 40, 141, 31));
+        brRadioButton->setChecked(true);
+        ypRadioButton = new QRadioButton(centralwidget);
+        ypRadioButton->setObjectName("ypRadioButton");
+        ypRadioButton->setGeometry(QRect(10, 70, 121, 22));
+        textBrowser = new QTextBrowser(centralwidget);
+        textBrowser->setObjectName("textBrowser");
+        textBrowser->setGeometry(QRect(10, 10, 131, 31));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
@@ -84,6 +98,16 @@ public:
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:36pt; font-weight:700; color:#aa0000;\">Game Over</span></p></body></html>", nullptr));
+        brRadioButton->setText(QCoreApplication::translate("MainWindow", "Red and Blue", nullptr));
+        ypRadioButton->setText(QCoreApplication::translate("MainWindow", "Yellow and Purple", nullptr));
+        textBrowser->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Color Scheme</p></body></html>", nullptr));
     } // retranslateUi
 
 };

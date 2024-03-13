@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->gameOverScreen->setVisible(false);
     ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
     ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
+    currentColors = 0;
 
     connect(this, &MainWindow::startButtonPressed, &model, &Model::start);
     connect(&model, &Model::lightUpButton, this, &MainWindow::glowButton);
@@ -67,38 +68,83 @@ void MainWindow::changeProgressBarPercentage(int newPercentage) {
 
 void MainWindow::glowButton(int buttonID, int timeToBeLit) {
     if (buttonID == 0) {
-        ui->redButton->setStyleSheet("background-color: rgb(200,50,50);");
+        if (currentColors == 0) {
+            ui->redButton->setStyleSheet("background-color: rgb(200,50,50);");
+        }
+        else {
+            ui->redButton->setStyleSheet("background-color: rgb(255, 236, 66);");
+        }
         QTimer::singleShot(timeToBeLit, this, [this](){this->resetColors();});
     }
     else {
-        ui->blueButton->setStyleSheet("background-color: rgb(50,50,200);");
+        if (currentColors == 0) {
+            ui->blueButton->setStyleSheet("background-color: rgb(50, 50, 200);");
+        }
+        else {
+            ui->blueButton->setStyleSheet("background-color: rgb(79, 0, 163);");
+        }
         QTimer::singleShot(timeToBeLit, this, [this](){this->resetColors();});
     }
 }
 
 
 void MainWindow::resetColors() {
-    ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
-    ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
+    if (currentColors == 0) {
+        ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
+        ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
+    }
+    else {
+        ui->redButton->setStyleSheet("background-color: rgb(189, 182, 81);");
+        ui->blueButton->setStyleSheet("background-color: rgb(150, 92, 191);");
+    }
 }
 
 void MainWindow::on_redButton_clicked()
 {
-    ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
-    ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
+    if (currentColors == 0) {
+        ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
+        ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
+    }
+    else{
+        ui->redButton->setStyleSheet("background-color: rgb(189, 182, 81);");
+        ui->blueButton->setStyleSheet("background-color: rgb(150, 92, 191);");
+    }
+
     emit playerSelectionComplete(0);
 }
 
 
 void MainWindow::on_blueButton_clicked()
 {
-    ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
-    ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
+    if (currentColors == 0) {
+        ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
+        ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
+    }
+    else {
+        ui->redButton->setStyleSheet("background-color: rgb(189, 182, 81);");
+        ui->blueButton->setStyleSheet("background-color: rgb(150, 92, 191);");
+    }
     emit playerSelectionComplete(1);
 }
 
 void MainWindow::on_startButton_clicked()
 {
     emit startButtonPressed();
+}
+
+
+void MainWindow::on_brRadioButton_clicked()
+{
+    currentColors = 0;
+    ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
+    ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
+}
+
+
+void MainWindow::on_ypRadioButton_clicked()
+{
+    currentColors = 1;
+    ui->redButton->setStyleSheet("background-color: rgb(189, 182, 81);");
+    ui->blueButton->setStyleSheet("background-color: rgb(150, 92, 191);");
 }
 
