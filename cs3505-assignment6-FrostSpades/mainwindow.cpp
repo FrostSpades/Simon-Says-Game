@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 #include <QStyle>
 #include <QTimer>
-#include <vector>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -10,20 +9,21 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     disableGameButtons();
+    ui->gameOverScreen->setVisible(false);
     ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
     ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
 
-    //connect(&model, &Model::signal, this, &MainWindow::disableGameButtons);
-    //connect(&model, &Model::createdSequence, this, &MainWindow::showSequence);
     connect(this, &MainWindow::startButtonPressed, &model, &Model::start);
-    //connect(this, &MainWindow::buttonLightingComplete, &model, &Model::lightNextButton);
-    //connect(&model, &Model::)
     connect(&model, &Model::lightUpButton, this, &MainWindow::glowButton);
     connect(&model, &Model::playersTurn, this, &MainWindow::enableGameButtons);
     connect(this, &MainWindow::playerSelectionComplete, &model, &Model::validatePlayerMove);
     connect(&model, &Model::turnOffButtons, this, &MainWindow::disableGameButtons);
-    connect(&model, &Model::gameOver, this, &MainWindow::gameOver);
-    //connect(&model, &Model::pauseBetweenTurns, this, &MainWindow::unGlowButtons);
+    connect(&model, &Model::disableStart, this, &MainWindow::disableStartButton);
+    connect(&model, &Model::enableStart, this, &MainWindow::enableStartButton);
+    connect(&model, &Model::showGameOverScreen, this, &MainWindow::enableGameOverScreen);
+    connect(&model, &Model::hideGameOverScreen, this, &MainWindow::disableGameOverScreen);
+    connect(&model, &Model::setStartButtonName, this, &MainWindow::changeStartButtonText);
+    connect(&model, &Model::setProgressBarPercentage, this, &MainWindow::changeProgressBarPercentage);
 }
 
 MainWindow::~MainWindow()
@@ -41,23 +41,41 @@ void MainWindow::disableGameButtons() {
     ui->blueButton->setEnabled(false);
 }
 
+void MainWindow::enableStartButton() {
+    ui->startButton->setEnabled(true);
+}
+
+void MainWindow::disableStartButton() {
+    ui->startButton->setEnabled(false);
+}
+
+void MainWindow::enableGameOverScreen() {
+    ui->gameOverScreen->setVisible(true);
+}
+
+void MainWindow::disableGameOverScreen() {
+    ui->gameOverScreen->setVisible(false);
+}
+
+void MainWindow::changeStartButtonText(QString newName) {
+    ui->startButton->setText(newName);
+}
+
+void MainWindow::changeProgressBarPercentage(int newPercentage) {
+    ui->progressBar->setValue(newPercentage);
+}
 
 void MainWindow::glowButton(int buttonID, int timeToBeLit) {
     if (buttonID == 0) {
         ui->redButton->setStyleSheet("background-color: rgb(200,50,50);");
-        QTimer::singleShot(timeToBeLit, this, [=](){resetColors();});
+        QTimer::singleShot(timeToBeLit, this, [this](){this->resetColors();});
     }
     else {
         ui->blueButton->setStyleSheet("background-color: rgb(50,50,200);");
-        QTimer::singleShot(timeToBeLit, this, [=](){resetColors();});
+        QTimer::singleShot(timeToBeLit, this, [this](){this->resetColors();});
     }
 }
 
-void MainWindow::gameOver()
-{
-    disableGameButtons();
-    // display gameover graphic
-}
 
 void MainWindow::resetColors() {
     ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
@@ -79,9 +97,8 @@ void MainWindow::on_blueButton_clicked()
     emit playerSelectionComplete(1);
 }
 
-
 void MainWindow::on_startButton_clicked()
 {
-    model.start();
+    emit startButtonPressed();
 }
 

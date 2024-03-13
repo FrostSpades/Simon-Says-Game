@@ -3,6 +3,8 @@
 #include <random>
 #include <QTimer>
 #include <iostream>
+#include <cmath>
+
 using std::cout;
 using std::endl;
 
@@ -22,58 +24,83 @@ void Model::start() {
     isPlayersTurn = false;
     performComputerMove();
     cout<< "game started" << endl;
-    // disable start button
+    emit setStartButtonName(QString("Playing"));
+    emit setProgressBarPercentage(0);
+    emit hideGameOverScreen();
+    emit disableStart();
 }
 
 double Model::getTime() {
-    return 500;
+    return 300+500*pow(.4, moves.size());
 }
 
 bool Model::validatePlayerMove(int move)
 {
     emit lightUpButton(move, getTime());
 
-    if(currentPlayerMove < moves.size())
+    // If it's game over, don't register the click
+    if (!gameIsOver)
     {
-        // see if its the right move
-        if(move == moves[currentPlayerMove])
+        emit turnOffButtons();
+        if(currentPlayerMove < moves.size())
         {
-            // update progress
-            cout<< "correct move" << endl;
-            currentPlayerMove++;
+            // see if its the right move
+            if(move == moves[currentPlayerMove])
+            {
+                // update progress
+                cout<< "correct move" << endl;
+                currentPlayerMove++;
+                int n = (int)(((double)(currentPlayerMove)/moves.size())*100);
+                emit setProgressBarPercentage(n);
+                emit playersTurn();
+            }
+            else
+            {
+                // emit gameover and show graphic
+                cout<< "wrong move, gameover" << endl;
+                //currentPlayerMove++;
+                gameIsOver = true;
+                gameOver();
+            }
         }
-        else
+
+        if(currentPlayerMove == moves.size())
         {
-            // emit gameover and show graphic
-            cout<< "wrong move, gameover" << endl;
-            //currentPlayerMove++;
-            gameIsOver = true;
-            emit gameOver();
-            // display graphic
+            cout<< "correct sequence, computers turn now" << endl;
+            isPlayersTurn = false;
+            currentPlayerMove = 0;
+            emit turnOffButtons();
+            QTimer::singleShot(1000, this, [this](){this->performComputerMove();});
         }
     }
 
-    if(currentPlayerMove == moves.size())
-    {
-        cout<< "correct sequence, computers turn now" << endl;
-        isPlayersTurn = false;
+    else {
         emit turnOffButtons();
-        currentPlayerMove = 0;
-        QTimer::singleShot(1000, this, [=](){performComputerMove();});
     }
+}
+
+void Model::gameOver() {
+    // emit game over screen
+    // enable start button
+    emit showGameOverScreen();
+    emit enableStart();
+    emit setStartButtonName(QString("Restart"));
 }
 
 void Model::performComputerMove()
 {
+    emit setProgressBarPercentage(0);
     int moveAdded = rand() % 2;
     cout<< "adding "<< moveAdded << " to sequence (0=red, 1=blue)" << endl;
     moves.push_back(moveAdded);
+    emit turnOffButtons();
+
     for (int i = 0; i < moves.size(); i++) {
-        QTimer::singleShot(2*i*getTime(), this, [=](){emit lightUpButton(moves[i], getTime());});
+        QTimer::singleShot(2*i*getTime(), this, [this, i](){emit this->lightUpButton(moves[i], getTime());});
     }
 
     currentPlayerMove = 0;
-    emit playersTurn();
+    QTimer::singleShot((2*moves.size() - 1)*getTime(), this, [this](){emit this->playersTurn();});
 }
 
 

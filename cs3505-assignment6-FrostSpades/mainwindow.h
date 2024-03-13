@@ -32,7 +32,12 @@ public slots:
     //void unGlowButtons();
     void resetColors();
     void disableGameButtons();
-    void gameOver();
+    void enableStartButton();
+    void disableStartButton();
+    void enableGameOverScreen();
+    void disableGameOverScreen();
+    void changeStartButtonText(QString newName);
+    void changeProgressBarPercentage(int newPercentage);
 
 private:
     Ui::MainWindow *ui;

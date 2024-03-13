@@ -13,6 +13,7 @@ private:
     void performComputerMove();
     bool gameIsOver;
     bool isPlayersTurn;
+    void gameOver();
 
 public:
     Model();
@@ -26,8 +27,15 @@ signals:
     void playersTurn();
     void computersTurn();
     void turnOffButtons();
-    void gameOver();
+
     void pauseBetweenTurns();
+    void disableStart();
+    void enableStart();
+    void showGameOverScreen();
+    void hideGameOverScreen();
+    void setStartButtonName(QString newName);
+    void setProgressBarPercentage(int newPercentage);
+
 public slots:
     //void lightNextButton();
     bool validatePlayerMove(int move);

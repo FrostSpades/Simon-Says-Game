@@ -13,8 +13,10 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -26,6 +28,8 @@ public:
     QPushButton *redButton;
     QPushButton *blueButton;
     QPushButton *startButton;
+    QTextBrowser *gameOverScreen;
+    QProgressBar *progressBar;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -45,6 +49,13 @@ public:
         startButton = new QPushButton(centralwidget);
         startButton->setObjectName("startButton");
         startButton->setGeometry(QRect(330, 330, 151, 51));
+        gameOverScreen = new QTextBrowser(centralwidget);
+        gameOverScreen->setObjectName("gameOverScreen");
+        gameOverScreen->setGeometry(QRect(150, 40, 511, 121));
+        progressBar = new QProgressBar(centralwidget);
+        progressBar->setObjectName("progressBar");
+        progressBar->setGeometry(QRect(210, 440, 441, 41));
+        progressBar->setValue(0);
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
@@ -65,6 +76,14 @@ public:
         redButton->setText(QString());
         blueButton->setText(QString());
         startButton->setText(QCoreApplication::translate("MainWindow", "Start", nullptr));
+        gameOverScreen->setHtml(QCoreApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:36pt; font-weight:700; color:#aa0000;\">Game Over</span></p></body></html>", nullptr));
     } // retranslateUi
 
 };
