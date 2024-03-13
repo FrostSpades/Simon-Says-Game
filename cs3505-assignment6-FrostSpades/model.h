@@ -11,6 +11,7 @@ private:
     int currentPlayerMove;
     std::vector<int> moves;
     void performComputerMove();
+    bool gameIsOver;
 
 public:
     Model();

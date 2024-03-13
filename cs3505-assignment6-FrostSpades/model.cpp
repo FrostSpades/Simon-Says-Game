@@ -12,6 +12,7 @@ Model::~Model() {
 
 void Model::start() {
     moves.clear();
+    gameIsOver = false;
     currentPlayerMove = 0;
     currentDemoColor = 0;
     performComputerMove();
@@ -19,7 +20,7 @@ void Model::start() {
 }
 
 double Model::getTime() {
-    return 5000;
+    return 1000;
 }
 
 bool Model::validatePlayerMove(int move)
@@ -35,6 +36,8 @@ bool Model::validatePlayerMove(int move)
         else
         {
             // emit gameover and show graphic
+            currentPlayerMove++;
+            gameIsOver = true;
             emit gameOver();
             // display graphic
         }
@@ -44,6 +47,7 @@ bool Model::validatePlayerMove(int move)
     {
         emit turnOffButtons();
         currentPlayerMove = 0;
+        //
         performComputerMove();
     }
 }
@@ -57,17 +61,21 @@ void Model::performComputerMove()
 
 void Model::lightNextButton()
 {
-    if(currentDemoColor < moves.size())
+    if(!gameIsOver)
     {
-        emit lightUpButton(moves[currentDemoColor], getTime());
-        currentDemoColor++;
+        if(currentDemoColor < moves.size())
+        {
+            emit lightUpButton(moves[currentDemoColor], getTime());
+            currentDemoColor++;
+        }
+        else
+        {
+            // computer demo is done, user turn
+            currentPlayerMove = 0;
+            emit playersTurn();
+        }
     }
-    else
-    {
-        // computer demo is done, user turn
-        currentPlayerMove = 0;
-        emit playersTurn();
-    }
+
 }
 
 

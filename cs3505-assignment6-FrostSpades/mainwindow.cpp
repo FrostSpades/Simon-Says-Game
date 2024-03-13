@@ -54,7 +54,7 @@ void MainWindow::glowButton(int buttonID, int timeToBeLit) {
 void MainWindow::gameOver()
 {
     disableGameButtons();
-    ui->redButton->setStyleSheet("background-color: rgb(0,0,0);");
+    // display gameover graphic
 }
 
 void MainWindow::resetColors() {
