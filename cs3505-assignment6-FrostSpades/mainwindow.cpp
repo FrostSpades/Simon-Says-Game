@@ -1,3 +1,13 @@
+/*
+ * Implementation of the MainWindow class. Represents the view
+ * and controller for our simon game.
+ *
+ * CS3505
+ * @date 03/13/2024
+ * @author Ethan Andrews
+ * @author Vasil Vassilev
+ */
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QStyle>
@@ -7,17 +17,22 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow), model()
 {
+    // Set up the looks of the ui
     ui->setupUi(this);
-    disableGameButtons();
     ui->gameOverScreen->setVisible(false);
     ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
     ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
+
+    disableGameButtons();
     currentColors = 0;
 
+    // Perform view to model connections
     connect(this, &MainWindow::startButtonPressed, &model, &Model::start);
+    connect(this, &MainWindow::playerSelectionComplete, &model, &Model::validatePlayerMove);
+
+    // Perform model to view connections
     connect(&model, &Model::lightUpButton, this, &MainWindow::glowButton);
     connect(&model, &Model::playersTurn, this, &MainWindow::enableGameButtons);
-    connect(this, &MainWindow::playerSelectionComplete, &model, &Model::validatePlayerMove);
     connect(&model, &Model::turnOffButtons, this, &MainWindow::disableGameButtons);
     connect(&model, &Model::disableStart, this, &MainWindow::disableStartButton);
     connect(&model, &Model::enableStart, this, &MainWindow::enableStartButton);
@@ -68,6 +83,7 @@ void MainWindow::changeProgressBarPercentage(int newPercentage) {
 
 void MainWindow::glowButton(int buttonID, int timeToBeLit) {
     if (buttonID == 0) {
+        // Determine colors by color id
         if (currentColors == 0) {
             ui->redButton->setStyleSheet("background-color: rgb(200,50,50);");
         }
@@ -101,6 +117,7 @@ void MainWindow::resetColors() {
 
 void MainWindow::on_redButton_clicked()
 {
+    // Light up color
     if (currentColors == 0) {
         ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
         ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
@@ -110,12 +127,14 @@ void MainWindow::on_redButton_clicked()
         ui->blueButton->setStyleSheet("background-color: rgb(150, 92, 191);");
     }
 
+    // Notify model
     emit playerSelectionComplete(0);
 }
 
 
 void MainWindow::on_blueButton_clicked()
 {
+    // Light up color
     if (currentColors == 0) {
         ui->redButton->setStyleSheet("background-color: rgb(200,150,150);");
         ui->blueButton->setStyleSheet("background-color: rgb(150,150,200);");
@@ -124,6 +143,8 @@ void MainWindow::on_blueButton_clicked()
         ui->redButton->setStyleSheet("background-color: rgb(189, 182, 81);");
         ui->blueButton->setStyleSheet("background-color: rgb(150, 92, 191);");
     }
+
+    // Notify model
     emit playerSelectionComplete(1);
 }
 

@@ -1,6 +1,15 @@
+/*
+ * Implementation of model class. Represents the model
+ * of the simon game.
+ *
+ * CS3505
+ * @date 03/13/2024
+ * @author Ethan Andrews
+ * @author Vasil Vassilev
+ */
+
 #include "model.h"
 #include <vector>
-#include <random>
 #include <QTimer>
 #include <iostream>
 #include <cmath>
@@ -8,22 +17,22 @@
 using std::cout;
 using std::endl;
 
-Model::Model() {
+Model::Model() {}
 
-}
-
-Model::~Model() {
-
-}
+Model::~Model() {}
 
 void Model::start() {
+    // Reset the model
     moves.clear();
-    gameIsOver = false;
     currentPlayerMove = 0;
     currentDemoColor = 0;
     isPlayersTurn = false;
+    gameIsOver = false;
+
+    // Start showing the computer moves
     performComputerMove();
-    cout<< "game started" << endl;
+
+    // Set the view
     emit setStartButtonName(QString("Playing"));
     emit setProgressBarPercentage(0);
     emit hideGameOverScreen();
@@ -34,42 +43,47 @@ double Model::getTime() {
     return 300+500*pow(.4, moves.size());
 }
 
-bool Model::validatePlayerMove(int move)
+void Model::validatePlayerMove(int move)
 {
     emit lightUpButton(move, getTime());
 
     // If it's game over, don't register the click
     if (!gameIsOver)
     {
+        // Turn off the buttons
         emit turnOffButtons();
-        if(currentPlayerMove < moves.size())
+
+        // Check if it is the last move
+        if((unsigned long long)currentPlayerMove < moves.size())
         {
             // see if its the right move
             if(move == moves[currentPlayerMove])
             {
                 // update progress
-                cout<< "correct move" << endl;
                 currentPlayerMove++;
-                int n = (int)(((double)(currentPlayerMove)/moves.size())*100);
-                emit setProgressBarPercentage(n);
+                int newPercentage = (int)(((double)(currentPlayerMove)/moves.size())*100);
+                emit setProgressBarPercentage(newPercentage);
                 emit playersTurn();
             }
+
+            // Trigger game over if not right move
             else
             {
-                // emit gameover and show graphic
-                cout<< "wrong move, gameover" << endl;
-                //currentPlayerMove++;
                 gameIsOver = true;
                 gameOver();
             }
         }
 
-        if(currentPlayerMove == moves.size())
+        // If last move, add move and show player
+        if((unsigned long long)currentPlayerMove == moves.size())
         {
-            cout<< "correct sequence, computers turn now" << endl;
             isPlayersTurn = false;
             currentPlayerMove = 0;
+
+            // Disable the buttons
             emit turnOffButtons();
+
+            // Display computer moves after 1 second has passed
             QTimer::singleShot(1000, this, [this](){this->performComputerMove();});
         }
     }
@@ -89,17 +103,22 @@ void Model::gameOver() {
 
 void Model::performComputerMove()
 {
-    emit setProgressBarPercentage(0);
+    // Add a new move
     int moveAdded = rand() % 2;
-    cout<< "adding "<< moveAdded << " to sequence (0=red, 1=blue)" << endl;
     moves.push_back(moveAdded);
+
+    // Set view
+    emit setProgressBarPercentage(0);
     emit turnOffButtons();
 
-    for (int i = 0; i < moves.size(); i++) {
+    // Trigger events for lighting up buttons
+    for (int i = 0; (unsigned long long)i < moves.size(); i++) {
         QTimer::singleShot(2*i*getTime(), this, [this, i](){emit this->lightUpButton(moves[i], getTime());});
     }
 
     currentPlayerMove = 0;
+
+    // Emit players turn after all events are finished
     QTimer::singleShot((2*moves.size() - 1)*getTime(), this, [this](){emit this->playersTurn();});
 }
 
