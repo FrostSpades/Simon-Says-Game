@@ -6,11 +6,14 @@
  *
  *  Github Repository: https://github.com/UofU-CS3505/cs3505-assignment6-FrostSpades.git
  *
- *  Creative Element: Our creative element is
- *  an addition of a new element, the radio buttons. There are two
+ *  Creative Element: Our creative element has two
+ *  parts. We added color scheme controls, and we
+ *  also added a death sound. There are two
  *  radio buttons that control the color scheme
  *  of the buttons. You can change between color
- *  schemes by changing between the buttons.
+ *  schemes by changing between the buttons. The
+ *  player death sound plays once the player has
+ *  played an incorrect move.
  *
  *  @author Ethan Andrews
  *  @author Vasil Vassilev
