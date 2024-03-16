@@ -11,6 +11,8 @@
 
 #include <QMainWindow>
 #include "model.h"
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -78,40 +80,62 @@ public slots:
     void glowButton(int buttonId, int timeToBeLit);
 
     /**
-     * @brief resetColors
-     * Resets the button colors.
-     */
-    void resetColors();
-
-    /**
      * @brief disableGameButtons
      * Disables the game buttons.
      */
     void disableGameButtons();
 
     /**
-     * @brief enableStartButton
-     * Enables the start button.
+     * @brief enableGameButtons
+     * Enables the current game buttons.
      */
-    void enableStartButton();
+    void enableGameButtons();
 
     /**
-     * @brief disableStartButton
-     * Disables the start button.
+     * @brief showStartScreen
+     * Shows the start screen.
      */
-    void disableStartButton();
+    void showStartScreen();
 
     /**
-     * @brief enableGameOverScreen
-     * Enables the game over graphic.
+     * @brief updateScreenPlayerTurn
+     * Updates the screen after a player has
+     * made a turn.
+     *
+     * @param newPercentage the new percentage to
+     * set to the progress bar
      */
-    void enableGameOverScreen();
+    void updateScreenPlayerTurn(int newPercentage);
 
     /**
-     * @brief disableGameOverScreen
-     * Disables the game over graphic.
+     * @brief updateScreenComputerTurn
+     * Updates the screen after a computer
+     * has made a turn.
      */
-    void disableGameOverScreen();
+    void updateScreenComputerTurn();
+
+    /**
+     * @brief showGameOverScreen
+     * Shows the game over screen.
+     */
+    void showGameOverScreen();
+
+private:
+    Ui::MainWindow *ui;
+    Model model;
+    QMediaPlayer* audioPlayer;
+    QAudioOutput* audioOutput;
+
+    // stores the current color scheme
+    int currentColors;
+
+    /**
+     * @brief changeProgressBarPercentage
+     * Changes the percentage of the progress bar.
+     *
+     * @param newPercentage the new percentage
+     */
+    void changeProgressBarPercentage(int newPercentage);
 
     /**
      * @brief changeStartButtonText
@@ -122,24 +146,40 @@ public slots:
     void changeStartButtonText(QString newName);
 
     /**
-     * @brief changeProgressBarPercentage
-     * Changes the percentage of the progress bar.
-     *
-     * @param newPercentage the new percentage
+     * @brief disableGameOverScreen
+     * Disables the game over graphic.
      */
-    void changeProgressBarPercentage(int newPercentage);
-
-private:
-    Ui::MainWindow *ui;
-    Model model;
-    // stores the current color scheme
-    int currentColors;
+    void disableGameOverScreen();
 
     /**
-     * @brief enableGameButtons
-     * Enables the current game buttons.
+     * @brief enableGameOverScreen
+     * Enables the game over graphic.
      */
-    void enableGameButtons();
+    void enableGameOverScreen();
+
+    /**
+     * @brief disableStartButton
+     * Disables the start button.
+     */
+    void disableStartButton();
+
+    /**
+     * @brief resetColors
+     * Resets the button colors.
+     */
+    void resetColors();
+
+    /**
+     * @brief enableStartButton
+     * Enables the start button.
+     */
+    void enableStartButton();
+
+    /**
+     * @brief playDeathAudio
+     * Plays the death audio.
+     */
+    void playDeathAudio();
 
 signals:
     /**

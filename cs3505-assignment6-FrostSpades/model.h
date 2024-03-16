@@ -30,11 +30,6 @@ private:
      */
     void performComputerMove();
 
-    /**
-     * @brief gameOver controls the view's actions in the event of a wrong input, displays game over screen, and switches replay button on
-     */
-    void gameOver();
-
 public:
     /**
      * @brief Model
@@ -67,7 +62,7 @@ signals:
      * @brief playersTurn
      * Sends signal to the view that it is the players turn
      */
-    void playersTurn();
+    void playersTurn(int playerMovePercentage);
 
     /**
      * @brief turnOffButtons
@@ -76,42 +71,28 @@ signals:
     void turnOffButtons();
 
     /**
-     * @brief disableStart
-     * Sends signal to disable the start button.
+     * @brief gameStarted
+     * Sends signal that game has started.
      */
-    void disableStart();
+    void gameStarted();
 
     /**
-     * @brief enableStart
-     * Sends signal to enable the start button.
+     * @brief turnOnButtons
+     * Sends signal to turn on the game buttons.
      */
-    void enableStart();
+    void turnOnButtons();
 
     /**
-     * @brief showGameOverScreen
-     * Sends signal to show the game over screen.
+     * @brief triggerGameOver
+     * Sends signal that the game is over.
      */
-    void showGameOverScreen();
+    void triggerGameOver();
 
     /**
-     * @brief hideGameOverScreen
-     * Sends signal to hide the game over screen.
+     * @brief computersTurn
+     * Sends signal that it is the computers turn.
      */
-    void hideGameOverScreen();
-
-    /**
-     * @brief setStartButtonName
-     * Sets the start button name
-     * @param newName the new name to set it to
-     */
-    void setStartButtonName(QString newName);
-
-    /**
-     * @brief setProgressBarPercentage
-     * Sets the percentage of the progress bar.
-     * @param newPercentage the new percentage to set it to.
-     */
-    void setProgressBarPercentage(int newPercentage);
+    void computersTurn();
 
 public slots:
     /**

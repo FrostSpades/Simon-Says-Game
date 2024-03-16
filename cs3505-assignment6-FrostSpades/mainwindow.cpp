@@ -12,6 +12,9 @@
 #include "ui_mainwindow.h"
 #include <QStyle>
 #include <QTimer>
+#include <QMediaPlayer>
+#include <QAudioOutput>
+#include <QUrl>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -26,25 +29,32 @@ MainWindow::MainWindow(QWidget *parent)
     disableGameButtons();
     currentColors = 0;
 
+    // Set up the audio output
+    audioPlayer = new QMediaPlayer;
+    audioOutput = new QAudioOutput;
+    audioPlayer->setAudioOutput(audioOutput);
+    audioPlayer->setSource(QUrl::fromLocalFile("../Resources/loseHorn.mp3"));
+    audioOutput->setVolume(50);
+
     // Perform view to model connections
     connect(this, &MainWindow::startButtonPressed, &model, &Model::start);
     connect(this, &MainWindow::playerSelectionComplete, &model, &Model::validatePlayerMove);
 
     // Perform model to view connections
     connect(&model, &Model::lightUpButton, this, &MainWindow::glowButton);
-    connect(&model, &Model::playersTurn, this, &MainWindow::enableGameButtons);
     connect(&model, &Model::turnOffButtons, this, &MainWindow::disableGameButtons);
-    connect(&model, &Model::disableStart, this, &MainWindow::disableStartButton);
-    connect(&model, &Model::enableStart, this, &MainWindow::enableStartButton);
-    connect(&model, &Model::showGameOverScreen, this, &MainWindow::enableGameOverScreen);
-    connect(&model, &Model::hideGameOverScreen, this, &MainWindow::disableGameOverScreen);
-    connect(&model, &Model::setStartButtonName, this, &MainWindow::changeStartButtonText);
-    connect(&model, &Model::setProgressBarPercentage, this, &MainWindow::changeProgressBarPercentage);
+    connect(&model, &Model::gameStarted, this, &MainWindow::showStartScreen);
+    connect(&model, &Model::turnOnButtons, this, &MainWindow::enableGameButtons);
+    connect(&model, &Model::playersTurn, this, &MainWindow::updateScreenPlayerTurn);
+    connect(&model, &Model::computersTurn, this, &MainWindow::updateScreenComputerTurn);
+    connect(&model, &Model::triggerGameOver, this, &MainWindow::showGameOverScreen);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete audioPlayer;
+    delete audioOutput;
 }
 
 void MainWindow::enableGameButtons() {
@@ -79,6 +89,37 @@ void MainWindow::changeStartButtonText(QString newName) {
 
 void MainWindow::changeProgressBarPercentage(int newPercentage) {
     ui->progressBar->setValue(newPercentage);
+}
+
+void MainWindow::playDeathAudio() {
+
+    audioPlayer->play();
+
+}
+
+void MainWindow::updateScreenPlayerTurn(int newPercentage) {
+    changeProgressBarPercentage(newPercentage);
+    enableGameButtons();
+}
+
+void MainWindow::updateScreenComputerTurn() {
+
+    changeProgressBarPercentage(0);
+    disableGameButtons();
+}
+
+void MainWindow::showStartScreen() {
+    changeStartButtonText("Playing");
+    changeProgressBarPercentage(0);
+    disableGameOverScreen();
+    disableStartButton();
+}
+
+void MainWindow::showGameOverScreen() {
+    enableGameOverScreen();
+    enableStartButton();
+    changeStartButtonText(QString("Restart"));
+    playDeathAudio();
 }
 
 void MainWindow::glowButton(int buttonID, int timeToBeLit) {

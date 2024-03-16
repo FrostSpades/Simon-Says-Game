@@ -32,11 +32,8 @@ void Model::start() {
     // Start showing the computer moves
     performComputerMove();
 
-    // Set the view
-    emit setStartButtonName(QString("Playing"));
-    emit setProgressBarPercentage(0);
-    emit hideGameOverScreen();
-    emit disableStart();
+    // Tell view game has started
+    emit gameStarted();
 }
 
 double Model::getTime() {
@@ -62,15 +59,16 @@ void Model::validatePlayerMove(int move)
                 // update progress
                 currentPlayerMove++;
                 int newPercentage = (int)(((double)(currentPlayerMove)/moves.size())*100);
-                emit setProgressBarPercentage(newPercentage);
-                emit playersTurn();
+
+                //emit setProgressBarPercentage(newPercentage);
+                emit playersTurn(newPercentage);
             }
 
             // Trigger game over if not right move
             else
             {
                 gameIsOver = true;
-                gameOver();
+                emit triggerGameOver();
             }
         }
 
@@ -93,13 +91,6 @@ void Model::validatePlayerMove(int move)
     }
 }
 
-void Model::gameOver() {
-    // emit game over screen
-    // enable start button
-    emit showGameOverScreen();
-    emit enableStart();
-    emit setStartButtonName(QString("Restart"));
-}
 
 void Model::performComputerMove()
 {
@@ -108,8 +99,7 @@ void Model::performComputerMove()
     moves.push_back(moveAdded);
 
     // Set view
-    emit setProgressBarPercentage(0);
-    emit turnOffButtons();
+    emit computersTurn();
 
     // Trigger events for lighting up buttons
     for (int i = 0; (unsigned long long)i < moves.size(); i++) {
@@ -119,7 +109,7 @@ void Model::performComputerMove()
     currentPlayerMove = 0;
 
     // Emit players turn after all events are finished
-    QTimer::singleShot((2*moves.size() - 1)*getTime(), this, [this](){emit this->playersTurn();});
+    QTimer::singleShot((2*moves.size() - 1)*getTime(), this, [this](){emit this->turnOnButtons();});
 }
 
 
